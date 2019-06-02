@@ -1,6 +1,8 @@
 ﻿using SalePCServiceDAL.Interfaces;
-using SalePCServiceImplementList;
+using SalePCServiceImplementDataBase;
+using SalePCServiceImplementDataBase.Implementations;
 using System;
+using System.Data.Entity;
 using System.Windows;
 using Unity;
 using Unity.Lifetime;
@@ -29,15 +31,17 @@ namespace SalePCView
         public static IUnityContainer BuildUnityContainer()
         {
             var currentContainer = new UnityContainer();
-            currentContainer.RegisterType<IClientService, ClientServiceList>(new
+            currentContainer.RegisterType<DbContext, AbstractPCDbContext>(new
            HierarchicalLifetimeManager());
-            currentContainer.RegisterType<IHardwareService, HardwareServiceList>(new
+            currentContainer.RegisterType<IClientService, ClientServiceDB>(new
            HierarchicalLifetimeManager());
-            currentContainer.RegisterType<IPCService, PCServiceList>(new
+            currentContainer.RegisterType<IHardwareService, HardwareServiceDB>(new
            HierarchicalLifetimeManager());
-            currentContainer.RegisterType<IMainService, MainServiceList>(new
+            currentContainer.RegisterType<IPCService, PCServiceDB>(new
            HierarchicalLifetimeManager());
-            currentContainer.RegisterType<IStockService, StockServiceList>(new 
+            currentContainer.RegisterType<IMainService, MainServiceDB>(new
+           HierarchicalLifetimeManager());
+            currentContainer.RegisterType<IStockService, StockServiceDB>(new 
            HierarchicalLifetimeManager());
             return currentContainer;
         }

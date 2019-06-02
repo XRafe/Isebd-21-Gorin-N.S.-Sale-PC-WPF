@@ -72,7 +72,7 @@ namespace SalePCView
                     int id = ((PCViewModel)comboBoxPC.SelectedItem).Id;
                     PCViewModel product = serviceCF.GetElement(id);
                     int count = Convert.ToInt32(textBoxCount.Text);
-                    textBoxSum.Text = (count * product.Price).ToString();
+                    textBoxSum.Text = (Convert.ToInt32(count * product.Price)).ToString();
                 }
                 catch (Exception ex)
                 {

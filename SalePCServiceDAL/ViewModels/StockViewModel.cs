@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel;
+using System.ComponentModel;
+
 
 namespace SalePCServiceDAL.ViewModels
 {
@@ -9,5 +10,6 @@ namespace SalePCServiceDAL.ViewModels
         [DisplayName("Название склада")]
         public string StockName { get; set; }
         public List<StockHardwareViewModel> StockHardware { get; set; }
-    }
+    }
+
 }
