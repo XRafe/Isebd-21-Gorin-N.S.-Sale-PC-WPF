@@ -18,7 +18,9 @@
                 <MenuItem x:Name="Клиенты" Header="Клиенты" Height="25" Click="Клиенты_Click"/>
                 <MenuItem x:Name="Комплектующие" Header="Комплектующие" Height="25" Click="Комплектующие_Click" Margin="0,0,-10,0"/>
                 <MenuItem x:Name="Компьютеры" Header="Компьютеры" HorizontalAlignment="Left" Height="25" Width="120" Click="Компьютеры_Click"/>
+                <MenuItem Header="Склады" HorizontalAlignment="Left" Height="28" Width="135" Margin="0,0,-21,0" Click="Склады_Click"/>
             </MenuItem>
+            <MenuItem Header="Пополнить склад" Height="22" Margin="0" Width="100" Click="Пополнитьсклад_Click"/>
         </Menu>
     </Grid>
 </Window>

@@ -11,6 +11,7 @@ namespace SalePCServiceDAL.Interfaces
         void TakeOrderInWork(OrderBindingModel model);
         void FinishOrder(OrderBindingModel model);
         void PayOrder(OrderBindingModel model);
+        void PutHardwareOnStock(StockHardwareBindingModel model);
     }
 
 }

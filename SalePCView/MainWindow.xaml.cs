@@ -117,5 +117,16 @@ namespace SalePCView
         }
 
 
+        private void Склады_Click(object sender, EventArgs e)
+        {
+            var form = Container.Resolve<WindowStocks>();
+            form.ShowDialog();
+        }
+
+        private void Пополнитьсклад_Click(object sender, EventArgs e)
+        {
+            var form = Container.Resolve<WindowPutOnStock>();
+            form.ShowDialog();
+        }
     }
 }

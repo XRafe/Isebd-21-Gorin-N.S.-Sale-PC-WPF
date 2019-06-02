@@ -88,6 +88,15 @@
     <Compile Include="WindowPCs.xaml.cs">
       <DependentUpon>WindowPCs.xaml</DependentUpon>
     </Compile>
+    <Compile Include="WindowPutOnStock.xaml.cs">
+      <DependentUpon>WindowPutOnStock.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="WindowStock.xaml.cs">
+      <DependentUpon>WindowStock.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="WindowStocks.xaml.cs">
+      <DependentUpon>WindowStocks.xaml</DependentUpon>
+    </Compile>
     <Page Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -133,6 +142,18 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="WindowPCs.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="WindowPutOnStock.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="WindowStock.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="WindowStocks.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

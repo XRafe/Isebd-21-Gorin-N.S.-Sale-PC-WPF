@@ -4,6 +4,7 @@ using SalePCServiceDAL.BindingModels;
 using SalePCServiceDAL.Interfaces;
 using SalePCServiceDAL.ViewModels;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SalePCServiceImplementList
 {
@@ -16,101 +17,64 @@ namespace SalePCServiceImplementList
         }
         public List<PCViewModel> GetList()
         {
-            List<PCViewModel> result = new List<PCViewModel>();
-            for (int i = 0; i < source.PCs.Count; ++i)
-            {
-                // требуется дополнительно получить список компонентов для изделия и их количество
-                List<PCHardwareViewModel> PCHardwares = new List<PCHardwareViewModel>();
-                for (int j = 0; j < source.PCHardwares.Count; ++j)
-                {
-                    if (source.PCHardwares[j].PCId == source.PCs[i].Id)
-                    {
-                        string HardwareName = string.Empty;
-                        for (int k = 0; k < source.Hardwares.Count; ++k)
-                        {
-                            if (source.PCHardwares[j].HardwareId ==
-                           source.Hardwares[k].Id)
-                            {
-                                HardwareName = source.Hardwares[k].HardwareName;
-                                break;
-                            }
-                        }
-                        PCHardwares.Add(new PCHardwareViewModel
-                        {
-                            Id = source.PCHardwares[j].Id,
-                            PCId = source.PCHardwares[j].PCId,
-                            HardwareId = source.PCHardwares[j].HardwareId,
-                            HardwareNames = HardwareName,
-                            Count = source.PCHardwares[j].Count
-                        });
-                    }
-                }
-                result.Add(new PCViewModel
-                {
-                    Id = source.PCs[i].Id,
-                    PCName = source.PCs[i].PCName,
-                    Price = source.PCs[i].Price,
-                    PCHardwares = PCHardwares
-                });
-            }
+            List<PCViewModel> result = source.PCs
+ .Select(rec => new PCViewModel
+ {
+     Id = rec.Id,
+     PCName = rec.PCName,
+     Price = rec.Price,
+     PCHardwares = source.PCHardwares
+ .Where(recPC => recPC.PCId == rec.Id)
+.Select(recPC => new PCHardwareViewModel
+{
+    Id = recPC.Id,
+    PCId = recPC.PCId,
+    HardwareId = recPC.HardwareId,
+    HardwareNames = source.Hardwares.FirstOrDefault(recC =>
+    recC.Id == recPC.HardwareId)?.HardwareName,
+    Count = recPC.Count
+})
+.ToList()
+ })
+ .ToList();
             return result;
         }
         public PCViewModel GetElement(int id)
         {
-            for (int i = 0; i < source.PCs.Count; ++i)
+            PC element = source.PCs.FirstOrDefault(rec => rec.Id == id);
+            if (element != null)
             {
-                // требуется дополнительно получить список компонентов для изделия и их количество
-                List<PCHardwareViewModel> PCHardwares = new List<PCHardwareViewModel>();
-                for (int j = 0; j < source.PCHardwares.Count; ++j)
+                return new PCViewModel
                 {
-                    if (source.PCHardwares[j].PCId == source.PCs[i].Id)
-                    {
-                        string HardwareName = string.Empty;
-                        for (int k = 0; k < source.Hardwares.Count; ++k)
-                        {
-                            if (source.PCHardwares[j].HardwareId == source.Hardwares[k].Id)
-                            {
-                                HardwareName = source.Hardwares[k].HardwareName;
-                                break;
-                            }
-                        }
-                        PCHardwares.Add(new PCHardwareViewModel
-                        {
-                            Id = source.PCHardwares[j].Id,
-                            PCId = source.PCHardwares[j].PCId,
-                            HardwareId = source.PCHardwares[j].HardwareId,
-                            HardwareNames = HardwareName,
-                            Count = source.PCHardwares[j].Count
-                        });
-                    }
-                }
-                if (source.PCs[i].Id == id)
+                    Id = element.Id,
+                    PCName = element.PCName,
+                    Price = element.Price,
+                    PCHardwares = source.PCHardwares
+                .Where(recPC => recPC.PCId == element.Id)
+                .Select(recPC => new PCHardwareViewModel
                 {
-                    return new PCViewModel
-                    {
-                        Id = source.PCs[i].Id,
-                        PCName = source.PCs[i].PCName,
-                        Price = source.PCs[i].Price,
-                        PCHardwares = PCHardwares
-                    };
-                }
+                    Id = recPC.Id,
+                    PCId = recPC.PCId,
+                    HardwareId = recPC.HardwareId,
+                    HardwareNames = source.Hardwares.FirstOrDefault(recC =>
+     recC.Id == recPC.HardwareId)?.HardwareName,
+                    Count = recPC.Count
+                })
+               .ToList()
+                };
             }
             throw new Exception("Элемент не найден");
         }
         public void AddElement(PCBindingModel model)
         {
-            int maxId = 0;
-            for (int i = 0; i < source.PCs.Count; ++i)
+            PC element = source.PCs.FirstOrDefault(rec => rec.PCName ==
+model.PCName);
+            if (element != null)
             {
-                if (source.PCs[i].Id > maxId)
-                {
-                    maxId = source.PCs[i].Id;
-                }
-                if (source.PCs[i].PCName == model.PCName)
-                {
-                    throw new Exception("Уже есть изделие с таким названием");
-                }
+                throw new Exception("Уже есть изделие с таким названием");
             }
+            int maxId = source.PCs.Count > 0 ? source.PCs.Max(rec => rec.Id) :
+           0;
             source.PCs.Add(new PC
             {
                 Id = maxId + 1,
@@ -118,146 +82,101 @@ namespace SalePCServiceImplementList
                 Price = model.Price
             });
             // компоненты для изделия
-            int maxPCId = 0;
-            for (int i = 0; i < source.PCHardwares.Count; ++i)
-            {
-                if (source.PCHardwares[i].Id > maxPCId)
-                {
-                    maxPCId = source.PCHardwares[i].Id;
-                }
-            }
+            int maxPCId = source.PCHardwares.Count > 0 ?
+           source.PCHardwares.Max(rec => rec.Id) : 0;
             // убираем дубли по компонентам
-            for (int i = 0; i < model.PCHardwares.Count; ++i)
-            {
-                for (int j = 1; j < model.PCHardwares.Count; ++j)
-                {
-                    if (model.PCHardwares[i].HardwareId ==
-                    model.PCHardwares[j].HardwareId)
-                    {
-                        model.PCHardwares[i].Count +=
-                        model.PCHardwares[j].Count;
-                        model.PCHardwares.RemoveAt(j--);
-                    }
-                }
-            }
+            var groupHardwares = model.PCHardwares
+            .GroupBy(rec => rec.HardwareId)
+           .Select(rec => new
+           {
+               HardwareId = rec.Key,
+               Count = rec.Sum(r => r.Count)
+           });
             // добавляем компоненты
-            for (int i = 0; i < model.PCHardwares.Count; ++i)
+            foreach (var groupHardware in groupHardwares)
             {
                 source.PCHardwares.Add(new PCHardwares
                 {
                     Id = ++maxPCId,
                     PCId = maxId + 1,
-                    HardwareId = model.PCHardwares[i].HardwareId,
-                    Count = model.PCHardwares[i].Count
+                HardwareId = groupHardware.HardwareId,
+                    Count = groupHardware.Count
                 });
             }
+
         }
         public void UpdElement(PCBindingModel model)
         {
-            int index = -1;
-            for (int i = 0; i < source.PCs.Count; ++i)
+            PC element = source.PCs.FirstOrDefault(rec => rec.PCName ==
+  model.PCName && rec.Id != model.Id);
+            if (element != null)
             {
-                if (source.PCs[i].Id == model.Id)
-                {
-                    index = i;
-                }
-                if (source.PCs[i].PCName == model.PCName &&
-                source.PCs[i].Id != model.Id)
-                {
-                    throw new Exception("Уже есть изделие с таким названием");
-                }
+                throw new Exception("Уже есть изделие с таким названием");
             }
-            if (index == -1)
+            element = source.PCs.FirstOrDefault(rec => rec.Id == model.Id);
+            if (element == null)
             {
                 throw new Exception("Элемент не найден");
             }
-            source.PCs[index].PCName = model.PCName;
-            source.PCs[index].Price = model.Price;
-            int maxPCId = 0;
-            for (int i = 0; i < source.PCHardwares.Count; ++i)
-            {
-                if (source.PCHardwares[i].Id > maxPCId)
-                {
-                    maxPCId = source.PCHardwares[i].Id;
-                }
-            }
+            element.PCName = model.PCName;
+            element.Price = model.Price;
+            int maxPCId = source.PCHardwares.Count > 0 ?
+           source.PCHardwares.Max(rec => rec.Id) : 0;
             // обновляем существуюущие компоненты
-            for (int i = 0; i < source.PCHardwares.Count; ++i)
+            var compIds = model.PCHardwares.Select(rec =>
+           rec.HardwareId).Distinct();
+            var updateHardwares = source.PCHardwares.Where(rec => rec.PCId ==
+           model.Id && compIds.Contains(rec.HardwareId));
+            foreach (var updateHardware in updateHardwares)
             {
-                if (source.PCHardwares[i].PCId == model.Id)
-                {
-                    bool flag = true;
-                    for (int j = 0; j < model.PCHardwares.Count; ++j)
-                    {
-                        // если встретили, то изменяем количество
-                        if (source.PCHardwares[i].Id ==
-                       model.PCHardwares[j].Id)
-                        {
-                            source.PCHardwares[i].Count =
-                           model.PCHardwares[j].Count;
-                            flag = false;
-                            break;
-                        }
-                    }
-                    // если не встретили, то удаляем
-                    if (flag)
-                    {
-                        source.PCHardwares.RemoveAt(i--);
-                    }
-                }
+                updateHardware.Count = model.PCHardwares.FirstOrDefault(rec =>
+               rec.Id == updateHardware.Id).Count;
             }
+            source.PCHardwares.RemoveAll(rec => rec.PCId == model.Id &&
+           !compIds.Contains(rec.HardwareId));
             // новые записи
-            for (int i = 0; i < model.PCHardwares.Count; ++i)
+            var groupHardwares = model.PCHardwares
+            .Where(rec => rec.Id == 0)
+           .GroupBy(rec => rec.HardwareId)
+           .Select(rec => new
+           {
+               HardwareId = rec.Key,
+               Count = rec.Sum(r => r.Count)
+           });
+            foreach (var groupHardware in groupHardwares)
             {
-                if (model.PCHardwares[i].Id == 0)
+                PCHardwares elementPC = source.PCHardwares.FirstOrDefault(rec
+               => rec.PCId == model.Id && rec.HardwareId == groupHardware.HardwareId);
+                if (elementPC != null)
                 {
-                    // ищем дубли
-                    for (int j = 0; j < source.PCHardwares.Count; ++j)
+                    elementPC.Count += groupHardware.Count;
+                }
+                else
+                {
+                    source.PCHardwares.Add(new PCHardwares
                     {
-                        if (source.PCHardwares[j].PCId == model.Id &&
-                        source.PCHardwares[j].HardwareId ==
-                       model.PCHardwares[i].HardwareId)
-                        {
-                            source.PCHardwares[j].Count +=
-                           model.PCHardwares[i].Count;
-                            model.PCHardwares[i].Id =
-                           source.PCHardwares[j].Id;
-                            break;
-                        }
-                    }
-                    // если не нашли дубли, то новая запись
-                    if (model.PCHardwares[i].Id == 0)
-                    {
-                        source.PCHardwares.Add(new PCHardwares
-                        {
-                            Id = ++maxPCId,
-                            PCId = model.Id,
-                            HardwareId = model.PCHardwares[i].HardwareId,
-                            Count = model.PCHardwares[i].Count
-                        });
-                    }
+                        Id = ++maxPCId,
+                        PCId = model.Id,
+                        HardwareId = groupHardware.HardwareId,
+                        Count = groupHardware.Count
+                    });
                 }
             }
         }
         public void DelElement(int id)
         {
-            // удаяем записи по компонентам при удалении изделия
-            for (int i = 0; i < source.PCHardwares.Count; ++i)
+            PC element = source.PCs.FirstOrDefault(rec => rec.Id == id);
+            if (element != null)
             {
-                if (source.PCHardwares[i].PCId == id)
-                {
-                    source.PCHardwares.RemoveAt(i--);
-                }
+                // удаяем записи по компонентам при удалении изделия
+                source.PCHardwares.RemoveAll(rec => rec.PCId == id);
+                source.PCs.Remove(element);
             }
-            for (int i = 0; i < source.PCs.Count; ++i)
+            else
             {
-                if (source.PCs[i].Id == id)
-                {
-                    source.PCs.RemoveAt(i);
-                    return;
-                }
+                throw new Exception("Элемент не найден");
             }
-            throw new Exception("Элемент не найден");
+
         }
     }
 
