@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // Общие сведения об этой сборке предоставляются следующим набором
 // набора атрибутов. Измените значения этих атрибутов, чтобы изменить сведения,
 // связанные со сборкой.
-[assembly: AssemblyTitle("SalePC")]
+[assembly: AssemblyTitle("SalePCServiceDAL")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("SalePC")]
+[assembly: AssemblyProduct("SalePCServiceDAL")]
 [assembly: AssemblyCopyright("Copyright ©  2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // Следующий GUID служит для идентификации библиотеки типов, если этот проект будет видимым для COM
-[assembly: Guid("a36afc51-89a6-40b9-b9dd-e76e937b2217")]
+[assembly: Guid("c5a5743d-28fe-497e-9ee3-425c92c1b1d8")]
 
 // Сведения о версии сборки состоят из следующих четырех значений:
 //
