@@ -1,0 +1,16 @@
+﻿<Window x:Class="SalePCView.WindowClient"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SalePCView"
+        mc:Ignorable="d"
+        Title="Клиент" Height="139.5" Width="332">
+    <Grid>
+        <Button x:Name="buttonSave" Content="Сохранить" HorizontalAlignment="Left" Margin="51,84,0,0" VerticalAlignment="Top" Width="74" Click="ButtonSave_Click"/>
+        <Button x:Name="buttonCancel" Content="Отмена" HorizontalAlignment="Left" Margin="202,84,0,0" VerticalAlignment="Top" Width="74" Click="ButtonCancel_Click"/>
+        <TextBox x:Name="textBoxFIO" HorizontalAlignment="Left" Height="22" Margin="51,27,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="225"/>
+        <Label x:Name="FIO" Content="ФИО:" HorizontalAlignment="Left" Margin="14,27,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.042,0.565"/>
+
+    </Grid>
+</Window>
