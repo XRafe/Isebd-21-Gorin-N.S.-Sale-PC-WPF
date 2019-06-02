@@ -46,17 +46,21 @@
     <Compile Include="BindingModels\OrderBindingModel.cs" />
     <Compile Include="BindingModels\PCBindingModel.cs" />
     <Compile Include="BindingModels\PCHardwareBindingModel.cs" />
+    <Compile Include="BindingModels\StockBindingModel.cs" />
+    <Compile Include="BindingModels\StockHardwareBindingModel.cs" />
     <Compile Include="Interfaces\IClientService.cs" />
     <Compile Include="Interfaces\IHardwareService.cs" />
     <Compile Include="Interfaces\IMainService.cs" />
-    <Compile Include="Interfaces\IPaymentService.cs" />
     <Compile Include="Interfaces\IPCService.cs" />
+    <Compile Include="Interfaces\IStockService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\ClientViewModel.cs" />
     <Compile Include="ViewModels\HardwareViewModel.cs" />
     <Compile Include="ViewModels\OrderViewModel.cs" />
     <Compile Include="ViewModels\PCHardwareViewModel.cs" />
     <Compile Include="ViewModels\PCViewModel.cs" />
+    <Compile Include="ViewModels\StockHardwareViewModel.cs" />
+    <Compile Include="ViewModels\StockViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SalePC\SalePC.csproj">

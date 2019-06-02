@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using SalePC;
 using SalePCServiceDAL.BindingModels;
 using SalePCServiceDAL.Interfaces;
@@ -17,84 +18,72 @@ namespace SalePCServiceImplementList
         }
         public List<HardwareViewModel> GetList()
         {
-            List<HardwareViewModel> result = new List<HardwareViewModel>();
-            for (int i = 0; i < source.Hardwares.Count; ++i)
+            List<HardwareViewModel> result = source.Hardwares.Select(rec => new
+            HardwareViewModel
             {
-                result.Add(new HardwareViewModel
-                {
-                    Id = source.Hardwares[i].Id,
-                    HardwareName = source.Hardwares[i].HardwareName
-                });
-            }
+                Id = rec.Id,
+                HardwareName = rec.HardwareName
+            })
+             .ToList();
             return result;
         }
         public HardwareViewModel GetElement(int id)
         {
-            for (int i = 0; i < source.Hardwares.Count; ++i)
+            Hardware element = source.Hardwares.FirstOrDefault(rec => rec.Id == id);
+            if (element != null)
             {
-                if (source.Hardwares[i].Id == id)
+                return new HardwareViewModel
                 {
-                    return new HardwareViewModel
-                    {
-                        Id = source.Hardwares[i].Id,
-                        HardwareName = source.Hardwares[i].HardwareName
-                    };
-                }
+                    Id = element.Id,
+                    HardwareName = element.HardwareName
+                };
             }
             throw new Exception("Элемент не найден");
         }
         public void AddElement(HardwareBindingModel model)
         {
-            int maxId = 0;
-            for (int i = 0; i < source.Hardwares.Count; ++i)
+            Hardware element = source.Hardwares.FirstOrDefault(rec => rec.HardwareName
+== model.HardwareName);
+            if (element != null)
             {
-                if (source.Hardwares[i].Id > maxId)
-                {
-                    maxId = source.Hardwares[i].Id;
-                }
-                if (source.Hardwares[i].HardwareName == model.HardwareName)
-                {
-                    throw new Exception("Уже есть компонент с таким названием");
-                }
+                throw new Exception("Уже есть компонент с таким названием");
             }
+            int maxId = source.Hardwares.Count > 0 ? source.Hardwares.Max(rec =>
+           rec.Id) : 0;
             source.Hardwares.Add(new Hardware
             {
                 Id = maxId + 1,
                 HardwareName = model.HardwareName
             });
+
         }
         public void UpdElement(HardwareBindingModel model)
         {
-            int index = -1;
-            for (int i = 0; i < source.Hardwares.Count; ++i)
+            Hardware element = source.Hardwares.FirstOrDefault(rec => rec.HardwareName
+== model.HardwareName && rec.Id != model.Id);
+            if (element != null)
             {
-                if (source.Hardwares[i].Id == model.Id)
-                {
-                    index = i;
-                }
-                if (source.Hardwares[i].HardwareName == model.HardwareName &&
-                source.Hardwares[i].Id != model.Id)
-                {
-                    throw new Exception("Уже есть компонент с таким названием");
-                }
+                throw new Exception("Уже есть компонент с таким названием");
             }
-            if (index == -1)
+            element = source.Hardwares.FirstOrDefault(rec => rec.Id == model.Id);
+            if (element == null)
             {
                 throw new Exception("Элемент не найден");
             }
-            source.Hardwares[index].HardwareName = model.HardwareName;
+            element.HardwareName = model.HardwareName;
         }
         public void DelElement(int id)
         {
-            for (int i = 0; i < source.Hardwares.Count; ++i)
+            Hardware element = source.Hardwares.FirstOrDefault(rec => rec.Id == id);
+            if (element != null)
             {
-                if (source.Hardwares[i].Id == id)
-                {
-                    source.Hardwares.RemoveAt(i);
-                    return;
-                }
+                source.Hardwares.Remove(element);
             }
-            throw new Exception("Элемент не найден");
+            else
+            {
+                throw new Exception("Элемент не найден");
+            }
+
         }
     }
 
