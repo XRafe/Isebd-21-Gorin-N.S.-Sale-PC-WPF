@@ -35,7 +35,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -189,6 +196,10 @@
     <ProjectReference Include="..\SalePCServiceDAL\SalePCServiceDAL.csproj">
       <Project>{4ab7af64-5d89-486f-997f-1d2b24842fd2}</Project>
       <Name>SalePCServiceDAL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SalePCServiceImplementDataBase\SalePCServiceImplementDataBase.csproj">
+      <Project>{59285dba-aed2-49be-a85b-cb477aed5456}</Project>
+      <Name>SalePCServiceImplementDataBase</Name>
     </ProjectReference>
     <ProjectReference Include="..\SalePCServiceImplementList\SalePCServiceImplementList.csproj">
       <Project>{5f4ea883-fe5c-4d64-b9eb-f2c9eb2c4266}</Project>

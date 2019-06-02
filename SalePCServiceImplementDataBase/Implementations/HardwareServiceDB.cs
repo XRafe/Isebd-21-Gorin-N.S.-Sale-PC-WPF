@@ -6,30 +6,29 @@ using SalePCServiceDAL.BindingModels;
 using SalePCServiceDAL.Interfaces;
 using SalePCServiceDAL.ViewModels;
 
-
-namespace SalePCServiceImplementList
+namespace SalePCServiceImplementDataBase.Implementations
 {
-    public class HardwareServiceList : IHardwareService
+    public class HardwareServiceDB : IHardwareService
     {
-        private DataListSingleton source;
-        public HardwareServiceList()
+        private AbstractPCDbContext context;
+        public HardwareServiceDB(AbstractPCDbContext context)
         {
-            source = DataListSingleton.GetInstance();
+            this.context = context;
         }
         public List<HardwareViewModel> GetList()
         {
-            List<HardwareViewModel> result = source.Hardwares.Select(rec => new
-            HardwareViewModel
+            List<HardwareViewModel> result = context.Hardwares.Select(rec => new
+           HardwareViewModel
             {
                 Id = rec.Id,
                 HardwareName = rec.HardwareName
             })
-             .ToList();
+            .ToList();
             return result;
         }
         public HardwareViewModel GetElement(int id)
         {
-            Hardware element = source.Hardwares.FirstOrDefault(rec => rec.Id == id);
+            Hardware element = context.Hardwares.FirstOrDefault(rec => rec.Id == id);
             if (element != null)
             {
                 return new HardwareViewModel
@@ -42,49 +41,46 @@ namespace SalePCServiceImplementList
         }
         public void AddElement(HardwareBindingModel model)
         {
-            Hardware element = source.Hardwares.FirstOrDefault(rec => rec.HardwareName
-== model.HardwareName);
+            Hardware element = context.Hardwares.FirstOrDefault(rec => rec.HardwareName ==
+           model.HardwareName);
             if (element != null)
             {
-                throw new Exception("Уже есть компонент с таким названием");
+                throw new Exception("Уже есть клиент с таким ФИО");
             }
-            int maxId = source.Hardwares.Count > 0 ? source.Hardwares.Max(rec =>
-           rec.Id) : 0;
-            source.Hardwares.Add(new Hardware
+            context.Hardwares.Add(new Hardware
             {
-                Id = maxId + 1,
                 HardwareName = model.HardwareName
             });
-
+            context.SaveChanges();
         }
         public void UpdElement(HardwareBindingModel model)
         {
-            Hardware element = source.Hardwares.FirstOrDefault(rec => rec.HardwareName
-== model.HardwareName && rec.Id != model.Id);
+            Hardware element = context.Hardwares.FirstOrDefault(rec => rec.HardwareName ==
+           model.HardwareName && rec.Id != model.Id);
             if (element != null)
             {
-                throw new Exception("Уже есть компонент с таким названием");
+                throw new Exception("Уже есть клиент с таким ФИО");
             }
-            element = source.Hardwares.FirstOrDefault(rec => rec.Id == model.Id);
+            element = context.Hardwares.FirstOrDefault(rec => rec.Id == model.Id);
             if (element == null)
             {
                 throw new Exception("Элемент не найден");
             }
             element.HardwareName = model.HardwareName;
+            context.SaveChanges();
         }
         public void DelElement(int id)
         {
-            Hardware element = source.Hardwares.FirstOrDefault(rec => rec.Id == id);
+            Hardware element = context.Hardwares.FirstOrDefault(rec => rec.Id == id);
             if (element != null)
             {
-                source.Hardwares.Remove(element);
+                context.Hardwares.Remove(element);
+                context.SaveChanges();
             }
             else
             {
                 throw new Exception("Элемент не найден");
             }
-
         }
     }
-
 }
